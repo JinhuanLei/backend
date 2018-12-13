@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'visual',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'backend.urls'
 
-
+ASGI_APPLICATION = 'backend.routing.application'
 
 
 TEMPLATES = [
@@ -73,6 +74,15 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
