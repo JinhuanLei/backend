@@ -16,15 +16,16 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        print("Disconnect")
         pass
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-
+        # message = text_data_json['message']
         self.send(text_data=json.dumps({
             'message': "Add Connection"
         }))
+        print("New Connect")
         self.run_live()
 
 
@@ -107,7 +108,7 @@ class ChatConsumer(WebsocketConsumer):
                         buttons = " ".join(buttons) + "\n"
                         clientsocket.send(buttons.encode())
                         self.send(text_data=json.dumps({
-                            'message': str(single_input[0])
+                            'data': str(single_input[0])
                         }))
                         display.update(single_input[0], state, prediction[0])
                 except:
