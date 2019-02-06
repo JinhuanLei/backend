@@ -3,7 +3,8 @@ import json
 import time
 from django.http import HttpResponse
 from django.shortcuts import render
-from Job import Job
+from .Job import Job
+from visual.models import Fruit
 task = None
 
 
@@ -29,4 +30,9 @@ def testFunc(request):
     else:
         task.resume()
         print("resume the Tasks")
+    return HttpResponse(json.dumps(""), content_type='application/json')
+
+def testDB(request):
+    fruit = Fruit.objects.create(name='Apple')
+    fruit.save()
     return HttpResponse(json.dumps(""), content_type='application/json')

@@ -17,6 +17,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/visual" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/visual/NNModel" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/visual/migrations" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
