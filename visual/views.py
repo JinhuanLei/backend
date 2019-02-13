@@ -2,12 +2,11 @@
 import json
 import time
 
-from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from visual.models import Fruit, NeuralNetworkModel
+
+from visual.models import Fruit, NeuralNetworkModel, Layer, Config
 from .Job import Job
 
 task = None
@@ -17,8 +16,18 @@ task = None
 def createModel(request):
     received_json_data = json.loads(request.body)
     print(received_json_data)
-    nnmodel = NeuralNetworkModel.objects.create(model_name=received_json_data['model_name'], model_period=0)
+    nnmodel = NeuralNetworkModel.objects.create(model_name=received_json_data['model_name'], model_duration=0)
+    model_id = nnmodel.id
     nnmodel.save()
+    config = Config.objects.create(dropout_rate=0.5, num_passes=10, model_id=model_id)
+    print(config.id)
+    config_id = config.id
+    config.save()
+    reqLayers = received_json_data['layers']
+    for l in reqLayers:
+        layer = Layer.objects.create(config_id=config_id, num_nets=l['val'], model_id=model_id)
+        layer.save()
+
     return HttpResponse(json.dumps(received_json_data), content_type='application/json')
 
 
