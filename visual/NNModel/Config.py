@@ -1,7 +1,8 @@
-from MarioRNN import MarioRNN
-from TrainData import DataSet
 import configparser
 import os
+
+from MarioRNN import MarioRNN
+from TrainData import DataSet
 
 root = os.path.dirname(__file__)
 configFilename = root + "/server_defaults.cfg"
@@ -51,7 +52,7 @@ def get_model(data, training):
 
 
 def get_checkpoint_dir():
-    print("configPath",config.get("Checkpoint", "Dir"))
+    print("configPath", config.get("Checkpoint", "Dir"))
     return config.get("Checkpoint", "Dir")
 
 
