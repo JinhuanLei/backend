@@ -20,5 +20,4 @@ class Config(models.Model):
     num_passes = models.IntegerField()
     model_id = models.IntegerField()
 
-class Fruit(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+

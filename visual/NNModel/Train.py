@@ -37,12 +37,14 @@ def do_validation(session, state, step, saver):
         saver.save(session, config.get_checkpoint_dir() + '\mario', global_step=step, write_meta_graph=False)
 
 
-def train():
+def train(isCustomized):
     global data, best_cost, model
-    data = config.get_data(training=True)
-    # print(config.get_checkpoint_dir())
+    if not isCustomized:
+        data = config.get_data(training=True)
+        model = config.get_model(data, training=True)
+    else:
+        pass
     print("Batches: %d Batch Size: %d Sequence Length: %d" % (data.num_batches, data.batch_size, data.num_steps))
-    model = config.get_model(data, training=True)
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
     step = 0
@@ -89,4 +91,4 @@ def train():
 
 
 if __name__ == "__main__":
-    train()
+    train(False)

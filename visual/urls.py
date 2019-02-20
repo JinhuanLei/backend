@@ -8,5 +8,6 @@ urlpatterns = [
     path('testDB/', views.testDB, name='index'),
     path('createModel/', views.createModel, name='index'),
     path('models/', views.getModels, name='index'),
+    path('quickstart/', views.quickStart, name='index'),
 
 ]

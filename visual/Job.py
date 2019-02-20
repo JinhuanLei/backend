@@ -1,5 +1,7 @@
 import threading
 import time
+
+
 class Job(threading.Thread):
     def __init__(self, *args, **kwargs):
         super(Job, self).__init__(*args, **kwargs)
@@ -11,7 +13,8 @@ class Job(threading.Thread):
     def run(self):
         while self.__running.isSet():
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-            print(1)
+            # rl.runlive()
+            print("2")
             time.time()
             time.sleep(1)
 

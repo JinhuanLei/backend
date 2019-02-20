@@ -6,11 +6,15 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from visual.models import Fruit, NeuralNetworkModel, Layer, Config
+from visual.models import NeuralNetworkModel, Layer, Config
 from .Job import Job
 
 task = None
 
+
+def quickStart(request):
+
+    return HttpResponse(json.dumps("return this string"))
 
 @csrf_exempt
 def createModel(request):

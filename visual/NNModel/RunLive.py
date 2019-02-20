@@ -11,12 +11,13 @@ import DisplayNetwork
 data = config.get_data(training=False)
 model = config.get_model(data, training=False)
 
-global_step = tf.contrib.framework.get_or_create_global_step()
-saver = tf.train.Saver()
+# global_step = tf.contrib.framework.get_or_create_global_step()
+global_step = tf.train.get_or_create_global_step
 
 
 def runlive():
-    global data, model, global_step, saver
+    global data, model, global_step
+    saver = tf.train.Saver()
     with tf.Session() as session:
         checkpoint = tf.train.latest_checkpoint(config.get_checkpoint_dir() + '\\')
         if checkpoint == None:
