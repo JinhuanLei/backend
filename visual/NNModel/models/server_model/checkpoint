@@ -1,6 +1,2 @@
-model_checkpoint_path: "mario-3345"
-all_model_checkpoint_paths: "mario-1636"
-all_model_checkpoint_paths: "mario-2197"
-all_model_checkpoint_paths: "mario-2649"
-all_model_checkpoint_paths: "mario-3021"
-all_model_checkpoint_paths: "mario-3345"
+model_checkpoint_path: "mario-6850"
+all_model_checkpoint_paths: "mario-6850"

@@ -1,20 +1,32 @@
 # Create your views here.
 import json
+import sys
 import time
-
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
 from visual.models import NeuralNetworkModel, Layer, Config
-from .Job import Job
-
+sys.path.append('/visual/NNModel')
+import Config as defaultConfig
 task = None
 
 
 def quickStart(request):
-
+    global defaultConfig
+    data = defaultConfig.get_data(training=True)
+    nnmodel = NeuralNetworkModel.objects.create(model_name='Default Model', model_duration=0)
+    model_id = nnmodel.id
+    nnmodel.save()
+    config = Config.objects.create(dropout_rate=0.5, num_passes=10, model_id=model_id)
+    print(config.id)
+    config_id = config.id
+    config.save()
+    reqLayers = defaultConfig.builtLayer()
+    for l in reqLayers:
+        layer = Layer.objects.create(config_id=config_id, num_nets=l, model_id=model_id)
+        layer.save()
     return HttpResponse(json.dumps("return this string"))
+
 
 @csrf_exempt
 def createModel(request):
@@ -31,7 +43,6 @@ def createModel(request):
     for l in reqLayers:
         layer = Layer.objects.create(config_id=config_id, num_nets=l['val'], model_id=model_id)
         layer.save()
-
     return HttpResponse(json.dumps(received_json_data), content_type='application/json')
 
 
@@ -55,21 +66,28 @@ def countdown(n):
         time.sleep(2)
 
 
+flag = True
+
+
 def testFunc(request):
-    global task
-    if task is None:
-        task = Job()
-        task.start()
-    if task.isRuning():
-        task.pause()
-        print("Pause the Tasks")
-    else:
-        task.resume()
-        print("resume the Tasks")
+    global flag
+    flag = True
+    # global task
+    # if task is None:
+    #     task = Job()
+    #     task.start()
+    # if task.isRuning():
+    #     task.pause()
+    #     print("Pause the Tasks")
+    # else:
+    #     task.resume()
+    #     print("resume the Tasks")
+    while flag:
+        print("run")
     return HttpResponse()
 
 
 def testDB(request):
-    fruit = Fruit.objects.create(name='Apple')
-    fruit.save()
+    global flag
+    flag = False
     return HttpResponse()

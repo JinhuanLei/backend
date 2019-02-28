@@ -23,7 +23,7 @@ def get_data(training):
     return data
 
 
-def get_model(data, training):
+def builtLayer():
     rnn_sizes = []
     layer = 1
     while True:
@@ -35,9 +35,12 @@ def get_model(data, training):
             layer = layer + 1
         except:
             break
-
     print("RNN Sizes: " + str(rnn_sizes))
+    return rnn_sizes
 
+
+def get_model(data, training):
+    rnn_sizes = builtLayer()
     model = MarioRNN(
         data=data,
         rnn_sizes=rnn_sizes,

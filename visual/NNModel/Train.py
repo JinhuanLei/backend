@@ -9,17 +9,24 @@ import time
 import tensorflow as tf
 
 import Config as config
+import CostomiseModel as cm
 
 ValidationPeriod = config.get_validation_period()
 best_cost = 0
 model = None
 data = None
+isPause = False
+
+
+def pause():
+    global isPause
+    if isPause is False:
+        isPause = True
 
 
 def do_validation(session, state, step, saver):
     global best_cost, model, data
     # global global_step
-
     feed_dict = {
         data.input: data.data[-1],
         data.output: data.labels[-1],
@@ -37,13 +44,17 @@ def do_validation(session, state, step, saver):
         saver.save(session, config.get_checkpoint_dir() + '\mario', global_step=step, write_meta_graph=False)
 
 
-def train(isCustomized):
+def train(isCustomized, rnn_size):
+    global isPause
     global data, best_cost, model
     if not isCustomized:
+        # rnnsize is not null
         data = config.get_data(training=True)
         model = config.get_model(data, training=True)
     else:
-        pass
+        # rnnsize is not null
+        data = cm.get_data(training=True)
+        model = cm.get_model(data, training=True, rnn_sizes=rnn_size)
     print("Batches: %d Batch Size: %d Sequence Length: %d" % (data.num_batches, data.batch_size, data.num_steps))
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
@@ -64,7 +75,7 @@ def train(isCustomized):
         }
         start_time = time.time()
         last_validation = start_time - ValidationPeriod
-        while True:
+        while isPause is False:
             try:
                 state = session.run(model.initial_state)
                 # data.random_reorder()
@@ -91,4 +102,4 @@ def train(isCustomized):
 
 
 if __name__ == "__main__":
-    train(False)
+    train(False, None)
