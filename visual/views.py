@@ -2,13 +2,23 @@
 import json
 import sys
 import time
+
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+
 from visual.models import NeuralNetworkModel, Layer, Config
+
 sys.path.append('/visual/NNModel')
-import Config as defaultConfig
 task = None
+
+
+def getModelById(request, id):
+    print(id)
+    # model = list(NeuralNetworkModel.objects.get(id=id))
+    layers = list(Layer.objects.filter(model_id=id).values())
+    print(layers)
+    return HttpResponse(json.dumps(layers), content_type='application/json')
 
 
 def quickStart(request):
