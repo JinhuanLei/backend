@@ -1,8 +1,9 @@
 # Create your views here.
+import datetime
 import json
 import sys
 import time
-import datetime
+
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +15,13 @@ import Train
 import Config as model_config
 
 task = None
+
+
+def deleteModelById(request, id):
+    Layer.objects.filter(model_id=id).delete()
+    Config.objects.filter(model_id=id).delete()
+    NeuralNetworkModel.objects.filter(id=id).delete()
+    return HttpResponse(json.dumps(id), content_type='application/json')
 
 
 def startTraining(request, id):
@@ -79,7 +87,7 @@ def getModels(request):
     # for model in models:
     #     print(model.id)
     # data = serializers.serialize('json', models)
-    return HttpResponse(json.dumps(models,cls=DateEncoder), content_type='application/json')
+    return HttpResponse(json.dumps(models, cls=DateEncoder), content_type='application/json')
 
 
 def index(request):
@@ -119,11 +127,12 @@ def testDB(request):
     flag = False
     return HttpResponse()
 
+
 class DateEncoder(json.JSONEncoder):
-    def default(self,obj):
-        if isinstance(obj,datetime.datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S')
-        elif isinstance(obj,datetime.date):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, datetime.date):
             return obj.strftime("%Y-%m-%d")
         else:
-            return json.JSONEncoder.default(self,obj)
+            return json.JSONEncoder.default(self, obj)
