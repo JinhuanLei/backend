@@ -10,7 +10,23 @@ from django.views.decorators.csrf import csrf_exempt
 from visual.models import NeuralNetworkModel, Layer, Config
 
 sys.path.append('/visual/NNModel')
+import Train
 task = None
+
+
+def startTraining(request, id):
+    layers = list(Layer.objects.filter(model_id=id).values())
+    training_layer = []
+    print(layers)
+    for layer in layers:
+        training_layer.append(layer['num_nets'])
+    Train.train(True, training_layer)
+    return HttpResponse(json.dumps(""), content_type='application/json')
+
+
+def stopTraining(request, id):
+    Train.pause()
+    return HttpResponse(json.dumps(""), content_type='application/json')
 
 
 def getModelById(request, id):
@@ -22,8 +38,6 @@ def getModelById(request, id):
 
 
 def quickStart(request):
-    global defaultConfig
-    data = defaultConfig.get_data(training=True)
     nnmodel = NeuralNetworkModel.objects.create(model_name='Default Model', model_duration=0)
     model_id = nnmodel.id
     nnmodel.save()

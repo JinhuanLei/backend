@@ -1,10 +1,15 @@
 from MarioRNN import MarioRNN
 from TrainData import DataSet
-
+import configparser
+import os
+root = os.path.dirname(__file__)
+configFilename = root + "/server_defaults.cfg"
+config = configparser.ConfigParser()
+config.read(["defaults.cfg", configFilename])
 
 def get_data(training):
     data = DataSet(
-        filenames="data\TiltedFixed2.txt",
+        filenames=['data\\TiltedFixed2.txt'],
         sequence_len=20,
         batch_size=3,
         train=training,
@@ -12,7 +17,17 @@ def get_data(training):
         recur_buttons=False
     )
     return data
-
+# def get_data(training):
+#     data = DataSet(
+#         filenames=config.get("Data", "Filename").strip().split('\n'),
+#         sequence_len=int(config.get("Data", "SequenceLength")),
+#         batch_size=int(config.get("Data", "BatchSize")),
+#         train=training,
+#         num_passes=int(config.get("Train", "NumPasses")),
+#         recur_buttons=config.get("Data", "RecurButtons") == "True"
+#     )
+#
+#     return data
 
 def get_model(data, training, rnn_sizes):
     # rnn_sizes = []

@@ -9,5 +9,7 @@ urlpatterns = [
     path('createModel/', views.createModel, name='index'),
     path('models/', views.getModels, name='index'),
     path('quickstart/', views.quickStart, name='index'),
-    path('model/<int:id>/', views.getModelById, name='index')
+    path('model/<int:id>/', views.getModelById, name='index'),
+    path('training/stop/<int:id>/', views.stopTraining, name='index'),
+    path('training/<int:id>/', views.startTraining, name='index'),
 ]

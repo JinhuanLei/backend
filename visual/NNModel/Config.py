@@ -8,7 +8,8 @@ root = os.path.dirname(__file__)
 configFilename = root + "/server_defaults.cfg"
 config = configparser.ConfigParser()
 config.read(["defaults.cfg", configFilename])
-
+if __name__ == "__main__":
+    print(config.get("Data", "Filename").strip().split('\n'))
 
 def get_data(training):
     data = DataSet(
