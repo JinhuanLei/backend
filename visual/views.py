@@ -2,7 +2,7 @@
 import json
 import sys
 import time
-
+import datetime
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +11,8 @@ from visual.models import NeuralNetworkModel, Layer, Config
 
 sys.path.append('/visual/NNModel')
 import Train
+import Config as model_config
+
 task = None
 
 
@@ -20,7 +22,8 @@ def startTraining(request, id):
     print(layers)
     for layer in layers:
         training_layer.append(layer['num_nets'])
-    Train.train(True, training_layer)
+    Train.start()
+    Train.train(True, training_layer, id)
     return HttpResponse(json.dumps(""), content_type='application/json')
 
 
@@ -45,7 +48,7 @@ def quickStart(request):
     print(config.id)
     config_id = config.id
     config.save()
-    reqLayers = defaultConfig.builtLayer()
+    reqLayers = model_config.builtLayer()
     for l in reqLayers:
         layer = Layer.objects.create(config_id=config_id, num_nets=l, model_id=model_id)
         layer.save()
@@ -76,7 +79,7 @@ def getModels(request):
     # for model in models:
     #     print(model.id)
     # data = serializers.serialize('json', models)
-    return HttpResponse(json.dumps(models), content_type='application/json')
+    return HttpResponse(json.dumps(models,cls=DateEncoder), content_type='application/json')
 
 
 def index(request):
@@ -115,3 +118,12 @@ def testDB(request):
     global flag
     flag = False
     return HttpResponse()
+
+class DateEncoder(json.JSONEncoder):
+    def default(self,obj):
+        if isinstance(obj,datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj,datetime.date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            return json.JSONEncoder.default(self,obj)

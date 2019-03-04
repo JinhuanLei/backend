@@ -5,7 +5,7 @@ from django.db import models
 class NeuralNetworkModel(models.Model):
     model_name = models.CharField(max_length=30)
     model_duration = models.IntegerField()
-    model_created = models.CharField(max_length=30)
+    model_created = models.DateTimeField(auto_now_add=True, blank=True)
     model_path = models.CharField(max_length=100)
 
 

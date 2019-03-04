@@ -4,7 +4,8 @@
 # 
 
 import datetime
-import time,os
+import os
+import time
 
 import tensorflow as tf
 
@@ -18,13 +19,18 @@ data = None
 isPause = False
 root = os.path.dirname(__file__)
 
+
 def pause():
     global isPause
     if isPause is False:
         isPause = True
 
+def start():
+    global isPause
+    if isPause is True:
+        isPause = False
 
-def do_validation(session, state, step, saver):
+def do_validation(session, state, step, saver, id):
     global best_cost, model, data, root
     # global global_step
     feed_dict = {
@@ -42,10 +48,11 @@ def do_validation(session, state, step, saver):
         best_cost = cost
         print("Saving model.")
         # print(root + '/server_model/mario')
-        saver.save(session, root + '/server_model/mario', global_step=step, write_meta_graph=False)
+        model_path = root + '/trained_model/' + str(id) + '/mario'
+        saver.save(session, model_path, global_step=step, write_meta_graph=False)
 
 
-def train(isCustomized, rnn_size):
+def train(isCustomized, rnn_size, id):
     global isPause, root
     global data, best_cost, model
     if not isCustomized:
@@ -61,7 +68,8 @@ def train(isCustomized, rnn_size):
     saver = tf.train.Saver()
     step = 0
     with tf.Session() as session:
-        path = root + '/server_model/'
+        # weird different with the previus code
+        path = root + '\\trained_model\\' + str(id) + '\\'
         last_checkpoint = tf.train.latest_checkpoint(path)
         if last_checkpoint is not None:
             print("Restoring session from path:" + last_checkpoint)
@@ -84,7 +92,7 @@ def train(isCustomized, rnn_size):
                 for b in range(data.num_batches - 1):
                     if time.time() - last_validation > ValidationPeriod:
                         last_validation += ValidationPeriod
-                        do_validation(session, validation_state, step, saver)
+                        do_validation(session, validation_state, step, saver, id)
                         if isPause:
                             break
                     feed_dict = {
@@ -102,7 +110,8 @@ def train(isCustomized, rnn_size):
             except KeyboardInterrupt:
                 # step = session.run(global_step)
                 print("Manually saving model.")
-                saver.save(session, config.get_checkpoint_dir() + '\\', global_step=step, write_meta_graph=False)
+                model_path = root + '/trained_model/' + str(id) + '/mario'
+                saver.save(session, model_path, global_step=step, write_meta_graph=False)
                 # /mario changed
     print("Training is Over")
 
@@ -110,4 +119,4 @@ def train(isCustomized, rnn_size):
 if __name__ == "__main__":
     # print(config.get("Data", "Filename").strip().split('\n'))
 
-    train(False, None)
+    train(False, None, '0')
