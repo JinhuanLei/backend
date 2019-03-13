@@ -9,12 +9,20 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from visual.models import NeuralNetworkModel, Layer, Config
-
+import RunLive
 sys.path.append('/visual/NNModel')
 import Train
 import Config as model_config
 
 task = None
+
+def validateModelById(request, id):
+    layers = list(Layer.objects.filter(model_id=id).values())
+    training_layer = []
+    print(layers)
+    for layer in layers:
+        training_layer.append(layer['num_nets'])
+    RunLive.runlive(training_layer, id)
 
 
 def deleteModelById(request, id):

@@ -25,10 +25,12 @@ def pause():
     if isPause is False:
         isPause = True
 
+
 def start():
     global isPause
     if isPause is True:
         isPause = False
+
 
 def do_validation(session, state, step, saver, id):
     global best_cost, model, data, root
@@ -55,14 +57,15 @@ def do_validation(session, state, step, saver, id):
 def train(isCustomized, rnn_size, id):
     global isPause, root
     global data, best_cost, model
-    if not isCustomized:
-        # rnnsize is null, use config model, should be depricated
-        data = config.get_data(training=True)
-        model = config.get_model(data, training=True)
-    else:
+    if isCustomized:
         # rnnsize is not null
         data = cm.get_data(training=True)
         model = cm.get_model(data, training=True, rnn_sizes=rnn_size)
+    else:
+        # rnnsize is null, use config model. should be depricated for testing purpose
+        data = config.get_data(training=True)
+        model = config.get_model(data, training=True)
+
     print("Batches: %d Batch Size: %d Sequence Length: %d" % (data.num_batches, data.batch_size, data.num_steps))
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
