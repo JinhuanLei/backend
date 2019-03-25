@@ -14,4 +14,8 @@ urlpatterns = [
     path('training/<int:id>/', views.startTraining, name='index'),
     path('model/delete/<int:id>/', views.deleteModelById, name='index'),
     path('playing/<int:id>/', views.validateModelById, name='index'),
+    path('validating/<int:id>/', views.startValidating, name='index'),
+    path('validating/stop/<int:id>/', views.stopValidating, name='index'),
+
+
 ]

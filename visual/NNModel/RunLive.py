@@ -13,6 +13,8 @@ import DisplayNetwork
 # global_step = tf.contrib.framework.get_or_create_global_step()  # old one already deprecated
 # global_step = tf.train.get_or_create_global_step()
 keepConnecting = True
+clientsocket = None
+server = None
 
 
 def disconnect():
@@ -26,7 +28,7 @@ def connect():
 
 
 def runlive(rnn_size, id):
-    global keepConnecting
+    global keepConnecting, clientsocket, server
     root = os.path.dirname(__file__)
     path = root + '\\trained_model\\' + str(id) + '\\'
     # global data, model, global_step
@@ -59,6 +61,8 @@ def runlive(rnn_size, id):
         }
 
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # 这样操作系统会在服务器socket被关闭或服务器进程终止后马上释放该服务器的端口，下次运行就不会出现上述问题啦。
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         port = 2222
         server.bind((socket.gethostname(), port))
         print("Hostname: %s Port: %d" % (socket.gethostname(), port))
@@ -66,6 +70,8 @@ def runlive(rnn_size, id):
         while keepConnecting is True:
             print("Listening for connection on port %d..." % (port,))
             (clientsocket, address) = server.accept()
+            if keepConnecting is False:
+                break
             print("Received client at %s" % (address,))
             display = DisplayNetwork.Display(data.input_width, data.input_height)
             try:
@@ -114,6 +120,21 @@ def runlive(rnn_size, id):
             finally:
                 display.close()
                 print("Close")
+    server.shutdown(socket.SHUT_WR)
+    print("Socket is Close")
+
+
+def stop_accept():
+    # Skip if sock.accept has executed.
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if clientsocket is None:
+            # ainfo = socket.getaddrinfo('127.0.0.1', 2222)
+            # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect(('127.0.0.1', 2222))
+    except:
+        pass
 
 
 if __name__ == "__main__":

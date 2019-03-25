@@ -1,33 +1,29 @@
 import os
 import random
 import socket
-import traceback
 import RunLive
-import tensorflow as tf
-from visual.models import NeuralNetworkModel, Layer, Config
-import NNModel.DisplayNetwork as DisplayNetwork
-import CostomiseModel as cm
+from visual.models import Layer
 root = os.path.dirname(__file__)
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
 
-class ChatConsumer(WebsocketConsumer):
-    def connect(self):
-        print("connected")
-        self.accept()
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
 
-    def disconnect(self, close_code):
-        print("Disconnect")
-        pass
+    async def disconnect(self, close_code):
+        # Leave room group
+        print("disconnect")
+        # Receive message from WebSocket
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         data = json.loads(text_data_json['message'])
         # print(text_data_json)
         # print(data)
         # print(data['id'])
-        self.send(text_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'message': "connected"
         }))
         if data['type'] == 'validateModel':
@@ -40,9 +36,13 @@ class ChatConsumer(WebsocketConsumer):
             RunLive.connect()
             RunLive.runlive(training_layer, id)
         elif data['type'] == 'stopValidating':
+            print("stopValidating")
             RunLive.disconnect()
+            RunLive.stop_accept()
         else:
             print("Other Operation")
+
+
 
     # def run_live(self, id):
     #     # self.send(text_data=json.dumps({
