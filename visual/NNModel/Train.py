@@ -18,7 +18,7 @@ model = None
 data = None
 isPause = False
 root = os.path.dirname(__file__)
-
+step = 0
 
 def pause():
     global isPause
@@ -32,8 +32,8 @@ def start():
         isPause = False
 
 
-def do_validation(session, state, step, saver, id):
-    global best_cost, model, data, root
+def do_validation(session, state,  saver, id):
+    global best_cost, model, data, step
     # global global_step
     feed_dict = {
         data.input: data.data[-1],
@@ -55,17 +55,17 @@ def do_validation(session, state, step, saver, id):
 
 
 def train(isCustomized, rnn_size, id):
-    global isPause, root
-    global data, best_cost, model
+    global isPause, root, step
+    global data, model
     if isCustomized:
         # rnnsize is not null
         data = cm.get_data(training=True)
+        # print("rnn_sizes:", rnn_size)
         model = cm.get_model(data, training=True, rnn_sizes=rnn_size)
     else:
         # rnnsize is null, use config model. should be depricated for testing purpose
         data = config.get_data(training=True)
         model = config.get_model(data, training=True)
-
     print("Batches: %d Batch Size: %d Sequence Length: %d" % (data.num_batches, data.batch_size, data.num_steps))
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
@@ -95,7 +95,7 @@ def train(isCustomized, rnn_size, id):
                 for b in range(data.num_batches - 1):
                     if time.time() - last_validation > ValidationPeriod:
                         last_validation += ValidationPeriod
-                        do_validation(session, validation_state, step, saver, id)
+                        do_validation(session, validation_state, saver, id)
                         if isPause:
                             break
                     feed_dict = {
@@ -121,5 +121,5 @@ def train(isCustomized, rnn_size, id):
 
 if __name__ == "__main__":
     # print(config.get("Data", "Filename").strip().split('\n'))
-
-    train(False, None, '0')
+    train(True, [50 ,25], '0')
+    # train(False, None, '0')

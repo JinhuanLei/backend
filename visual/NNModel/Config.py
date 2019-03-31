@@ -42,6 +42,7 @@ def builtLayer():
 
 def get_model(data, training):
     rnn_sizes = builtLayer()
+    # print("rnn_sizes:", rnn_sizes)
     model = MarioRNN(
         data=data,
         rnn_sizes=rnn_sizes,
