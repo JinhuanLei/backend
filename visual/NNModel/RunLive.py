@@ -69,8 +69,12 @@ def runlive(rnn_size, id):
         server.listen(1)
         while keepConnecting is True:
             print("Listening for connection on port %d..." % (port,))
-            (clientsocket, address) = server.accept()
+            try:
+                (clientsocket, address) = server.accept()
+            except:
+                pass
             if keepConnecting is False:
+                print("Break the connecting")
                 break
             print("Received client at %s" % (address,))
             display = DisplayNetwork.Display(data.input_width, data.input_height)
@@ -120,8 +124,8 @@ def runlive(rnn_size, id):
             finally:
                 display.close()
                 print("Close")
-    server.shutdown(socket.SHUT_WR)
-    print("Socket is Close")
+    # server.shutdown(socket.SHUT_WR)
+    print("RunLive Finished")
 
 
 def stop_accept():
@@ -134,6 +138,8 @@ def stop_accept():
             # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect(('127.0.0.1', 2222))
     except:
+        print("Error accepted")
+        server.close()
         pass
 
 

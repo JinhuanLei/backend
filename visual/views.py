@@ -26,6 +26,7 @@ def startValidating(request, id):
         training_layer.append(layer['num_nets'])
     RunLive.connect()
     RunLive.runlive(training_layer, id)
+    return HttpResponse(json.dumps(id), content_type='application/json')
 
 
 def stopValidating(request, id):
