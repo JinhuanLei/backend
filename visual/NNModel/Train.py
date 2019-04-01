@@ -11,7 +11,7 @@ import tensorflow as tf
 
 import Config as config
 import CostomiseModel as cm
-
+tf.reset_default_graph()
 ValidationPeriod = config.get_validation_period()
 best_cost = 0
 model = None
@@ -73,6 +73,10 @@ def train(isCustomized, rnn_size, id):
     with tf.Session() as session:
         # weird different with the previus code
         path = root + '\\trained_model\\' + str(id) + '\\'
+        logPath = root + '\\trained_logs\\' + str(id)
+        if not os.path.isdir(logPath):
+            os.makedirs(logPath)
+        writer = tf.summary.FileWriter(logPath + '\\', session.graph)
         last_checkpoint = tf.train.latest_checkpoint(path)
         if last_checkpoint is not None:
             print("Restoring session from path:" + last_checkpoint)
@@ -121,5 +125,5 @@ def train(isCustomized, rnn_size, id):
 
 if __name__ == "__main__":
     # print(config.get("Data", "Filename").strip().split('\n'))
-    train(True, [50 ,25], '0')
-    # train(False, None, '0')
+    # train(True, [50 ,25], '0')
+    train(False, None, '0')
