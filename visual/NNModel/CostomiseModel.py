@@ -7,14 +7,14 @@ configFilename = root + "/server_defaults.cfg"
 config = configparser.ConfigParser()
 config.read(["defaults.cfg", configFilename])
 
-def get_data(training):
+def get_data(customizedConfig,training):
     data = DataSet(
         filenames=['data\\TiltedFixed2.txt'],
-        sequence_len=20,
-        batch_size=3,
+        sequence_len=customizedConfig['sequence_length'],
+        batch_size=customizedConfig['batch_size'],
         train=training,
-        num_passes=10,
-        recur_buttons=False
+        num_passes=customizedConfig['num_passes'],
+        recur_buttons=customizedConfig['recur_button'],
     )
     return data
 # def get_data(training):
@@ -29,7 +29,7 @@ def get_data(training):
 #
 #     return data
 
-def get_model(data, training, rnn_sizes):
+def get_model(customizedConfig,data, training, rnn_sizes):
     # rnn_sizes = []
     # layer = 1
     # while True:
@@ -47,11 +47,11 @@ def get_model(data, training, rnn_sizes):
     model = MarioRNN(
         data=data,
         rnn_sizes=rnn_sizes,
-        max_grad_norm=float(10),
-        dropout_keep=float(0.5),
-        variational_recurrent=True,
+        max_grad_norm=float(customizedConfig['max_grad']),
+        dropout_keep=float(customizedConfig['drop_out']),
+        variational_recurrent=customizedConfig['variational_recurrent'],
         train=training,
-        loss_function="Mean Squared Error"
+        loss_function=customizedConfig['loss_function']
     )
 
     return model

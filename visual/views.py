@@ -8,10 +8,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-import RunLive
 from visual.models import NeuralNetworkModel, Layer, Config
 
 sys.path.append('/visual/NNModel')
+sys.path.append('C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel\\')
+import RunLive
 import Train
 import Config as model_config
 
@@ -34,6 +35,7 @@ def stopValidating(request, id):
     RunLive.stop_accept()
     return HttpResponse(json.dumps(id), content_type='application/json')
 
+
 def validateModelById(request, id):
     layers = list(Layer.objects.filter(model_id=id).values())
     training_layer = []
@@ -42,6 +44,7 @@ def validateModelById(request, id):
         training_layer.append(layer['num_nets'])
     RunLive.runlive(training_layer, id)
     return HttpResponse(json.dumps(id), content_type='application/json')
+
 
 def deleteModelById(request, id):
     Layer.objects.filter(model_id=id).delete()
@@ -70,15 +73,25 @@ def getModelById(request, id):
     print(id)
     # model = list(NeuralNetworkModel.objects.get(id=id))
     layers = list(Layer.objects.filter(model_id=id).values())
+    config = list(Config.objects.filter(model_id=id).values())
     print(layers)
-    return HttpResponse(json.dumps(layers), content_type='application/json')
+    data = {'layers': layers, 'config': config}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def quickStart(request):
     nnmodel = NeuralNetworkModel.objects.create(model_name='Default Model', model_duration=0)
     model_id = nnmodel.id
     nnmodel.save()
-    config = Config.objects.create(dropout_rate=0.5, num_passes=10, model_id=model_id)
+    config = Config.objects.create(drop_out=0.5,
+                                   num_passes=10,
+                                   batch_size=3,
+                                   sequence_length=20,
+                                   loss_function="Mean Squared Error",
+                                   recur_button=True,
+                                   max_grad=10,
+                                   variational_recurrent=True,
+                                   model_id=model_id)
     print(config.id)
     config_id = config.id
     config.save()
@@ -96,7 +109,17 @@ def createModel(request):
     nnmodel = NeuralNetworkModel.objects.create(model_name=received_json_data['model_name'], model_duration=0)
     model_id = nnmodel.id
     nnmodel.save()
-    config = Config.objects.create(dropout_rate=0.5, num_passes=10, model_id=model_id)
+
+    config = Config.objects.create(drop_out=received_json_data['dropOut'],
+                                   batch_size=received_json_data['batchSize'],
+                                   sequence_length=received_json_data['sequenceLength'],
+                                   num_passes=10,
+                                   model_id=model_id,
+                                   loss_function=received_json_data['lossFunction'],
+                                   recur_button=True,
+                                   max_grad=10,
+                                   variational_recurrent=True
+                                   )
     print(config.id)
     config_id = config.id
     config.save()
@@ -109,6 +132,8 @@ def createModel(request):
 
 def getModels(request):
     models = list(NeuralNetworkModel.objects.all().values())
+    # sets = list(TrainingSet.objects.all().values())
+    # print(sets)
     # print(models)
     # for model in models:
     #     print(model.id)

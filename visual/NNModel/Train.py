@@ -11,6 +11,8 @@ import tensorflow as tf
 
 import Config as config
 import CostomiseModel as cm
+from visual.models import Config
+
 tf.reset_default_graph()
 ValidationPeriod = config.get_validation_period()
 best_cost = 0
@@ -19,6 +21,7 @@ data = None
 isPause = False
 root = os.path.dirname(__file__)
 step = 0
+
 
 def pause():
     global isPause
@@ -32,7 +35,7 @@ def start():
         isPause = False
 
 
-def do_validation(session, state,  saver, id):
+def do_validation(session, state, saver, id):
     global best_cost, model, data, step
     # global global_step
     feed_dict = {
@@ -59,11 +62,12 @@ def train(isCustomized, rnn_size, id):
     global data, model
     if isCustomized:
         # rnnsize is not null
-        data = cm.get_data(training=True)
+        customizedConfig = list(Config.objects.filter(model_id=id).values())
+        data = cm.get_data(customizedConfig[0], training=True)
         # print("rnn_sizes:", rnn_size)
-        model = cm.get_model(data, training=True, rnn_sizes=rnn_size)
+        model = cm.get_model(customizedConfig[0], data, training=True, rnn_sizes=rnn_size)
     else:
-        # rnnsize is null, use config model. should be depricated for testing purpose
+        # rnnsize is null, use config model. should be depricated. Just for testing purpose
         data = config.get_data(training=True)
         model = config.get_model(data, training=True)
     print("Batches: %d Batch Size: %d Sequence Length: %d" % (data.num_batches, data.batch_size, data.num_steps))

@@ -16,8 +16,17 @@ class Layer(models.Model):
 
 
 class Config(models.Model):
-    dropout_rate = models.DecimalField(max_digits=5, decimal_places=5)
     num_passes = models.IntegerField()
     model_id = models.IntegerField()
+    loss_function = models.CharField(max_length=30)
+    sequence_length = models.IntegerField()
+    batch_size = models.IntegerField()
+    recur_button = models.BooleanField()
+    drop_out = models.FloatField()
+    max_grad = models.IntegerField()
+    variational_recurrent = models.BooleanField()
+
+class TrainingSet(models.Model):
+    path = models.CharField(max_length=100)
 
 
