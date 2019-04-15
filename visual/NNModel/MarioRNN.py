@@ -1,6 +1,5 @@
-import math
-
 import tensorflow as tf
+import math
 
 
 class MarioRNN(object):

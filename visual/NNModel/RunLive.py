@@ -4,7 +4,7 @@ import socket
 import traceback
 
 import tensorflow as tf
-
+from visual.models import Config
 import CostomiseModel as cm
 import DisplayNetwork
 
@@ -35,8 +35,9 @@ def runlive(rnn_size, id):
     global_step = tf.train.get_or_create_global_step()
     # data = config.get_data(training=False)
     # model = config.get_model(data, training=False)
-    data = cm.get_data(training=True)
-    model = cm.get_model(data, training=True, rnn_sizes=rnn_size)
+    customizedConfig = list(Config.objects.filter(model_id=id).values())
+    data = cm.get_data(customizedConfig[0],training=True)
+    model = cm.get_model(customizedConfig[0], data, training=True, rnn_sizes=rnn_size)
     saver = tf.train.Saver()
     with tf.Session() as session:
         checkpoint = tf.train.latest_checkpoint(path)
