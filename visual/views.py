@@ -52,6 +52,19 @@ def deleteModelById(request, id):
     NeuralNetworkModel.objects.filter(id=id).delete()
     return HttpResponse(json.dumps(id), content_type='application/json')
 
+@csrf_exempt
+def updateTrainingPeriod(request, id):
+    received_json_data = json.loads(request.body)
+    trained_time = received_json_data['training_period_inc']
+    # layers = list(Layer.objects.filter(model_id=id).values())
+    neuralNetwork = NeuralNetworkModel.objects.get(id=id)
+    model_duration = neuralNetwork.model_duration
+    result = model_duration + trained_time
+    print(result)
+    neuralNetwork.model_duration = result
+    neuralNetwork.save()
+    return HttpResponse(json.dumps(id), content_type='application/json')
+
 
 def startTraining(request, id):
     layers = list(Layer.objects.filter(model_id=id).values())
