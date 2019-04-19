@@ -123,7 +123,7 @@ def runlive(rnn_size, id):
                 clientsocket.send(b"close")
                 clientsocket.close()
             finally:
-                display.close()
+                # display.close()
                 print("Close")
     # server.shutdown(socket.SHUT_WR)
     print("RunLive Finished")

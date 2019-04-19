@@ -8,8 +8,9 @@ config = configparser.ConfigParser()
 config.read(["defaults.cfg", configFilename])
 
 def get_data(customizedConfig,training):
+    # filenames=['data\\TiltedFixed2.txt'],
     data = DataSet(
-        filenames=['data\\TiltedFixed2.txt'],
+        filenames=['data\\Default.txt'],
         sequence_len=customizedConfig['sequence_length'],
         batch_size=customizedConfig['batch_size'],
         train=training,
