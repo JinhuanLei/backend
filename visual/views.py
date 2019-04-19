@@ -15,7 +15,6 @@ sys.path.append('C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNM
 import RunLive
 import Train
 import Config as model_config
-
 task = None
 
 
