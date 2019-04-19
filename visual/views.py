@@ -83,16 +83,16 @@ def stopTraining(request, id):
 
 def getModelById(request, id):
     print(id)
-    # model = list(NeuralNetworkModel.objects.get(id=id))
+    training_set = NeuralNetworkModel.objects.get(id=id).training_set
     layers = list(Layer.objects.filter(model_id=id).values())
     config = list(Config.objects.filter(model_id=id).values())
     print(layers)
-    data = {'layers': layers, 'config': config}
+    data = {'training_set': training_set, 'layers': layers, 'config': config}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def quickStart(request):
-    nnmodel = NeuralNetworkModel.objects.create(model_name='Default Model', model_duration=0)
+    nnmodel = NeuralNetworkModel.objects.create(model_name='Default Model', model_duration=0, training_set="Default")
     model_id = nnmodel.id
     nnmodel.save()
     config = Config.objects.create(drop_out=0.5,
@@ -118,7 +118,7 @@ def quickStart(request):
 def createModel(request):
     received_json_data = json.loads(request.body)
     print(received_json_data)
-    nnmodel = NeuralNetworkModel.objects.create(model_name=received_json_data['model_name'], model_duration=0)
+    nnmodel = NeuralNetworkModel.objects.create(model_name=received_json_data['model_name'], model_duration=0, training_set=received_json_data['trainingSet'])
     model_id = nnmodel.id
     nnmodel.save()
 

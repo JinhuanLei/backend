@@ -1,4 +1,2 @@
-model_checkpoint_path: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-616"
-all_model_checkpoint_paths: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-0"
-all_model_checkpoint_paths: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-324"
-all_model_checkpoint_paths: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-616"
+model_checkpoint_path: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-617"
+all_model_checkpoint_paths: "C:\\Users\\Administrator\\PycharmProjects\\backend\\visual\\NNModel/trained_model/61/mario-617"
