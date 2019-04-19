@@ -6,7 +6,7 @@ class NeuralNetworkModel(models.Model):
     model_name = models.CharField(max_length=30)
     model_duration = models.IntegerField()
     model_created = models.DateTimeField(auto_now_add=True, blank=True)
-    model_path = models.CharField(max_length=100)
+    training_set = models.CharField(max_length=100)
 
 
 class Layer(models.Model):

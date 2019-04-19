@@ -78,7 +78,7 @@ def runlive(rnn_size, id):
                 print("Break the connecting")
                 break
             print("Received client at %s" % (address,))
-            display = DisplayNetwork.Display(data.input_width, data.input_height)
+            # display = DisplayNetwork.Display(data.input_width, data.input_height)
             try:
                 clientsocket.send((str(len(data.header)) + "\n").encode())
                 for param in data.header:
@@ -116,7 +116,7 @@ def runlive(rnn_size, id):
                         prev_buttons = [float(b) for b in buttons]
                     buttons = " ".join(buttons) + "\n"
                     clientsocket.send(buttons.encode())
-                    display.update(single_input[0], state, prediction[0])
+                    # display.update(single_input[0], state, prediction[0])
             except:
                 print("Exception occurred. Closing connection.")
                 print(traceback.print_exc())
