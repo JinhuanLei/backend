@@ -11,7 +11,7 @@ import tensorflow as tf
 
 import Config as config
 import CostomiseModel as cm
-from visual.models import Config
+from visual.models import Config, NeuralNetworkModel
 
 tf.reset_default_graph()
 ValidationPeriod = config.get_validation_period()
@@ -63,7 +63,8 @@ def train(isCustomized, rnn_size, id):
     if isCustomized:
         # rnnsize is not null
         customizedConfig = list(Config.objects.filter(model_id=id).values())
-        data = cm.get_data(customizedConfig[0], training=True)
+        training_set = NeuralNetworkModel.objects.get(id=id).training_set
+        data = cm.get_data(customizedConfig[0], training_set, training=True)
         # print("rnn_sizes:", rnn_size)
         model = cm.get_model(customizedConfig[0], data, training=True, rnn_sizes=rnn_size)
     else:

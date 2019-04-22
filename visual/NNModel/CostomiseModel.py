@@ -7,10 +7,11 @@ configFilename = root + "/server_defaults.cfg"
 config = configparser.ConfigParser()
 config.read(["defaults.cfg", configFilename])
 
-def get_data(customizedConfig,training):
+def get_data(customizedConfig,training_set, training):
     # filenames=['data\\TiltedFixed2.txt'],
+    print(customizedConfig)
     data = DataSet(
-        filenames=['data\\Default.txt'],
+        filenames=['data\\'+training_set+'.txt'],
         sequence_len=customizedConfig['sequence_length'],
         batch_size=customizedConfig['batch_size'],
         train=training,
