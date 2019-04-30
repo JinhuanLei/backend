@@ -128,7 +128,7 @@ def createModel(request):
                                    num_passes=10,
                                    model_id=model_id,
                                    loss_function=received_json_data['lossFunction'],
-                                   recur_button=True,
+                                   recur_button=False,
                                    max_grad=10,
                                    variational_recurrent=True
                                    )

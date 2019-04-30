@@ -106,6 +106,10 @@ def train(isCustomized, rnn_size, id):
                         last_validation += ValidationPeriod
                         do_validation(session, validation_state, saver, id)
                         if isPause:
+                            print("Saving model.")
+                            # print(root + '/server_model/mario')
+                            model_path = root + '/trained_model/' + str(id) + '/mario'
+                            saver.save(session, model_path, global_step=step, write_meta_graph=False)
                             break
                     feed_dict = {
                         data.input: data.data[b],
