@@ -6,7 +6,7 @@
 import datetime
 import os
 import time
-
+import pickle
 import tensorflow as tf
 
 import Config as config
@@ -60,13 +60,21 @@ def do_validation(session, state, saver, id):
 def train(isCustomized, rnn_size, id):
     global isPause, root, step
     global data, model
+    # object_path = root + '/loaded_object/' + str(id)+'/'
+    # if not os.path.isdir(object_path):
+    #     os.makedirs(object_path)
+    # object_path += 'train.txt'
     if isCustomized:
         # rnnsize is not null
         customizedConfig = list(Config.objects.filter(model_id=id).values())
         training_set = NeuralNetworkModel.objects.get(id=id).training_set
         data = cm.get_data(customizedConfig[0], training_set, training=True)
+        print("data loaded")
+        # with open(object_path, 'wb') as f:
+        #     pickle.dump(data, f)
         # print("rnn_sizes:", rnn_size)
         model = cm.get_model(customizedConfig[0], data, training=True, rnn_sizes=rnn_size)
+        print("model loaded")
     else:
         # rnnsize is null, use config model. should be depricated. Just for testing purpose
         data = config.get_data(training=True)

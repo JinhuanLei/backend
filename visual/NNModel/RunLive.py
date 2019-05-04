@@ -2,7 +2,7 @@ import os
 import random
 import socket
 import traceback
-
+import pickle
 import tensorflow as tf
 from visual.models import Config,NeuralNetworkModel
 import CostomiseModel as cm
@@ -31,14 +31,22 @@ def runlive(rnn_size, id):
     global keepConnecting, clientsocket, server
     root = os.path.dirname(__file__)
     path = root + '\\trained_model\\' + str(id) + '\\'
+    # object_path = root + '/loaded_object/' + str(id)+'/'
+    # if not os.path.isdir(object_path):
+    #     os.makedirs(object_path)
+    # object_path += 'train.txt'
     # global data, model, global_step
     global_step = tf.train.get_or_create_global_step()
     # data = config.get_data(training=False)
     # model = config.get_model(data, training=False)
     customizedConfig = list(Config.objects.filter(model_id=id).values())
     training_set = NeuralNetworkModel.objects.get(id=id).training_set
-    data = cm.get_data(customizedConfig[0],training_set, training=True)
-    model = cm.get_model(customizedConfig[0], data, training=True, rnn_sizes=rnn_size)
+    data = cm.get_data(customizedConfig[0],training_set, training=False)
+    print("data loaded")
+    model = cm.get_model(customizedConfig[0], data, training=False, rnn_sizes=rnn_size)
+    print("model loaded")
+    # with open(object_path, 'wb') as f:
+    #     pickle.dump(model, f)
     saver = tf.train.Saver()
     with tf.Session() as session:
         checkpoint = tf.train.latest_checkpoint(path)

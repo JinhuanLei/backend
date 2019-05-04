@@ -10,8 +10,13 @@ config.read(["defaults.cfg", configFilename])
 def get_data(customizedConfig,training_set, training):
     # filenames=['data\\TiltedFixed2.txt'],
     print(customizedConfig)
+    if training_set != 'Test':
+        fileName = ['data\\'+training_set+'.txt']
+    else:
+        fileName = ['data\\Large.txt', 'data\\Medium.txt', 'data\\Default.txt', 'data\\Small1.txt','data\\Small2.txt']
+    # filenames=['data\\'+training_set+'.txt'],
     data = DataSet(
-        filenames=['data\\'+training_set+'.txt'],
+        filenames=fileName,
         sequence_len=customizedConfig['sequence_length'],
         batch_size=customizedConfig['batch_size'],
         train=training,
