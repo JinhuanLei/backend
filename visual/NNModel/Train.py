@@ -22,7 +22,6 @@ isPause = False
 root = os.path.dirname(__file__)
 step = 0
 
-
 def pause():
     global isPause
     if isPause is False:
@@ -60,6 +59,7 @@ def do_validation(session, state, saver, id):
 def train(isCustomized, rnn_size, id):
     global isPause, root, step
     global data, model
+    epoch = 0
     # object_path = root + '/loaded_object/' + str(id)+'/'
     # if not os.path.isdir(object_path):
     #     os.makedirs(object_path)
@@ -109,6 +109,7 @@ def train(isCustomized, rnn_size, id):
             try:
                 state = session.run(model.initial_state)
                 # data.random_reorder()
+                print('Epoch ', epoch)
                 for b in range(data.num_batches - 1):
                     if time.time() - last_validation > ValidationPeriod:
                         last_validation += ValidationPeriod
@@ -130,6 +131,7 @@ def train(isCustomized, rnn_size, id):
                     vals = session.run(fetches, feed_dict)
                     state = vals["final_state"]
                     step = step + 1
+                epoch += 1
                 validation_state = state
             except KeyboardInterrupt:
                 # step = session.run(global_step)
